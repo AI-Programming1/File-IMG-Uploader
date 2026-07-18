@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>View uploaded file</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <style>
+    body{font-family:system-ui,Segoe UI,Roboto,Arial; padding:20px; background:#f3f6fa;}
+    .card{max-width:900px;margin:0 auto;background:#fff;padding:18px;border-radius:10px;box-shadow:0 8px 24px rgba(0,0,0,0.06);}
+    img, iframe, object{max-width:100%; height:auto; display:block; margin:10px 0;}
+    pre{white-space:pre-wrap;}
+    .meta{color:#555;}
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1 id="title">File viewer</h1>
+    <div id="meta" class="meta"></div>
+    <div id="display"></div>
+    <p id="download"></p>
+  </div>
+
+  <script>
+    const params = new URLSearchParams(location.search);
+    const id = params.get('id');
+    if(!id){ document.getElementById('meta').textContent='No id provided in the URL (e.g. ?id=abc123)'; throw 0; }
+
+    const fetchUrl = `/file/${encodeURIComponent(id)}`; // change if worker hosted elsewhere
+    async function load(){
+      const res = await fetch(fetchUrl);
+      if(!res.ok){
+        document.getElementById('meta').textContent = `Error: ${res.status} ${res.statusText}`;
+        return;
+      }
+      const ct = res.headers.get('Content-Type') || 'application/octet-stream';
+      const disp = res.headers.get('Content-Disposition') || '';
+      const filenameMatch = disp.match(/filename="?(.*?)"?$/);
+      const filename = filenameMatch ? filenameMatch[1] : id;
+
+      document.getElementById('meta').textContent = `${filename} — ${ct}`;
+
+      if(ct.startsWith('image/')){
+        // use blob URL
+        const blob = await res.blob();
+        const img = document.createElement('img');
+        img.src = URL.createObjectURL(blob);
+        document.getElementById('display').appendChild(img);
+      } else if (ct === 'application/pdf'){
+        const blob = await res.blob();
+        const obj = document.createElement('iframe');
+        obj.src = URL.createObjectURL(blob);
+        obj.style.height = '800px';
+        document.getElementById('display').appendChild(obj);
+      } else {
+        // fallback: show download link and try to fetch text
+        const blob = await res.blob();
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = filename;
+        a.textContent = 'Download file';
+        document.getElementById('download').appendChild(a);
+
+        // try to show text content
+        try {
+          const txt = await blob.text();
+          const pre = document.createElement('pre');
+          pre.textContent = txt.slice(0, 20000); // cap displayed text
+          document.getElementById('display').appendChild(pre);
+        } catch(e){
+          // binary unknown
+        }
+      }
+    }
+    load().catch(err => document.getElementById('meta').textContent = 'Error: '+err);
+  </script>
+</body>
+</html>

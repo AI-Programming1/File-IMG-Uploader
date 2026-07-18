@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Uploader</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <main class="container">
+    <h1>File & Image Uploader</h1>
+    <p class="hint">You can upload multiple files as long as their combined size ≤ 18.75 MiB (see note).</p>
+
+    <form id="uploadForm">
+      <label class="filelabel">
+        Choose files
+        <input id="fileInput" type="file" multiple />
+      </label>
+
+      <div id="summary"></div>
+      <button id="uploadBtn" type="submit">Upload</button>
+    </form>
+
+    <div id="result"></div>
+
+    <hr />
+    <p class="small">After uploading you'll get a short ID and a shareable URL (special.html?id=SHORTID).</p>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>

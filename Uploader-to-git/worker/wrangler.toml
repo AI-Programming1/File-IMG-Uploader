@@ -1,0 +1,10 @@
+name = "files"
+main = "index.js"
+compatibility_date = "2025-09-11"
+routes = [
+  { pattern = "sub.domain.com/*", zone_name = "domain.com" }
+]
+
+[[kv_namespaces]]
+binding = "FILES"
+id = "xxxxxxxxxxxxxxxxxxxxxxxxx"
