@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>File & Image Uploader</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; background: #f4f6f9; }
+    .card { background: #fff; padding: 20px; border-radius: 8px; max-width: 700px; margin: auto; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+    input, select, button { margin: 10px 0; padding: 10px; font-size: 16px; }
+    button { cursor: pointer; background: #0078f2; color: white; border: none; border-radius: 5px; }
+    button:hover { background: #005bb5; }
+    .links { margin-top: 20px; }
+    .link-item { margin: 5px 0; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>Upload Files</h1>
+    <input type="file" id="fileInput" multiple /><br>
+
+    <label>Expiration: 
+      <select id="expiry">
+        <option value="">Never</option>
+        <option value="3600">1 Hour</option>
+        <option value="86400">1 Day</option>
+        <option value="604800">7 Days</option>
+        <option value="2592000">30 Days</option>
+      </select>
+    </label><br>
+
+    <button id="uploadBtn">Upload</button>
+    <div class="links" id="links"></div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
